@@ -1,10 +1,10 @@
 # Test Cases
 
-This document records the acceptance tests for the WinningTemplate documentation/scaffold branch and the future review gates for real plugin implementation.
+This document records the acceptance tests for the WinningTemplate documentation/scaffold phase (slice 1 in `ROADMAP.md`) and the future review gates for real plugin implementation.
 
 Source documents used from WinningMethod/winningOS: `README.md`, `CORE.md`, `AGENTS.md`, `COMPATIBILITY.md`, `PLUGIN_TEMPLATE_HANDOVER.md`, and `IMPLEMENTATION_PLAN.md`.
 
-## WIN-16 acceptance tests
+## Documentation-scaffold acceptance tests
 
 Reviewer should verify the following:
 
@@ -31,7 +31,7 @@ find . -path ./.git -prune -o -type f ! -name '*.md' -print | sort
 find . -path ./.git -prune -o -type f \( -name 'package.json' -o -name 'package-lock.json' -o -name 'pnpm-lock.yaml' -o -name 'yarn.lock' -o -name 'next.config.*' -o -name 'tsconfig.json' -o -name '*.ts' -o -name '*.tsx' -o -name '*.js' -o -name '*.jsx' -o -name '*.sql' \) -print | sort
 ```
 
-Expected result for this branch:
+Expected result for the documentation-scaffold phase:
 
 - `git diff --check` exits successfully.
 - File inventory contains only Markdown documentation files outside `.git`.
@@ -64,4 +64,6 @@ When implementation work is authorized later, reviewers should add tests for the
 - routes live under `/p/{plugin_id}`
 - disable-level removal works by removing the registry line
 - purge-data removal is explicit, destructive, and never automatic
+- cross-plugin dependencies: every `dependsOn` target is registered earlier in Core's `config/plugins.ts`, every cross-plugin FK targets a declared `publicTables` entry, FK delete behavior is documented, and uninstall ordering is dependents-first
+- manifest `publicTables`/`dependsOn` match the migrations' actual foreign keys
 - validators and Core integration checks pass against a real Core deployment when available

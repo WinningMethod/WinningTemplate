@@ -6,7 +6,7 @@ Source documents used from WinningMethod/winningOS: `README.md`, `CORE.md`, `AGE
 
 ## Current documentation-only structure
 
-The WIN-16 branch should contain only Markdown documentation:
+The documentation-scaffold phase (slice 1 in `ROADMAP.md`) should contain only Markdown documentation:
 
 ```text
 README.md

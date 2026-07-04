@@ -63,7 +63,11 @@ A real plugin's `IMPLEMENTATION.md` must state the ten points required by Winnin
 9. removal at disable, remove-source, and purge-data levels
 10. known limitations
 
-## 5. Future implementation gates
+## 5. Use the canonical artifacts, do not re-derive them
+
+The manifest shape lives in `docs/MANIFEST.md`, the migration/RLS/uninstall SQL idioms in `docs/SQL_TEMPLATES.md`, and the hard-won correctness rules in `docs/SHARP_EDGES.md`. Real plugins copy these and rename; re-deriving them from memory is how the original bugs come back.
+
+## 6. Future implementation gates
 
 A real implementation task must add the future plugin surfaces deliberately and reviewably. The expected final plugin repo shape is documented in `docs/REPO_STRUCTURE.md`, but this current branch intentionally does not create those files.
 
@@ -77,7 +81,7 @@ Future plugin implementation should include:
 - an explicit uninstall script for purge-data removal
 - validators that keep manifest, permissions, migrations, and uninstall docs in sync
 
-## 6. Security and data rules
+## 7. Security and data rules
 
 Every plugin must enforce security outside the UI:
 
@@ -88,7 +92,7 @@ Every plugin must enforce security outside the UI:
 - resolve workspace context structurally, never by mutable slug
 - avoid touching `core_*`, private schema, or another plugin's private tables
 
-## 7. Dependency and shared data decisions
+## 8. Dependency and shared data decisions
 
 When a plugin needs data owned by another plugin, choose deliberately:
 
@@ -98,7 +102,7 @@ When a plugin needs data owned by another plugin, choose deliberately:
 - write another plugin's data only through the owning plugin's exposed server functions or RPCs
 - consider extracting shared infrastructure into a small data-owning plugin if multiple plugins need the same entity
 
-## 8. Removal expectations
+## 9. Removal expectations
 
 Every real plugin must document and support three removal levels:
 
@@ -108,7 +112,7 @@ Every real plugin must document and support three removal levels:
 
 Audit history should retain historical `plugin.{plugin_id}.*` action strings.
 
-## 9. Review checklist before release
+## 10. Review checklist before release
 
 Before a real plugin is released, reviewers should verify:
 

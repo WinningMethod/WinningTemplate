@@ -6,7 +6,7 @@ Source documents used from WinningMethod/winningOS: `README.md`, `CORE.md`, `AGE
 
 ## Current branch non-goals
 
-The WIN-16 documentation scaffold does not create:
+The documentation-scaffold phase (slice 1 in `ROADMAP.md`) does not create:
 
 - real plugin implementation code
 - real Supabase migrations
