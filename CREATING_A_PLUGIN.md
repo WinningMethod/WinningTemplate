@@ -134,3 +134,21 @@ Before a real plugin is released, reviewers should verify:
 - server/data boundaries enforce permissions
 - uninstall expectations are explicit
 - validation commands have been run against the plugin repo and a real Core integration where applicable
+
+## 11. Seeing your plugin live
+
+This repo never deploys — it has no app. To run your plugin for real:
+
+1. Create (or use) a **deployment repo**: a clone of WinningOS Core. Core's
+   `DEPLOYMENT.md` is the complete zero-to-live runbook for it — Supabase
+   project, migrations, hosted auth config, and Vercel — and its section 7
+   covers the plugin-specific parts.
+2. Install your plugin there per Core's `COMPATIBILITY.md` "Installation":
+   copy `plugin/` to `plugins/{plugin_id}/`, add the one registry line, copy
+   `db/migrations/*` in with install-date timestamps, `db push`.
+3. Gate on Core's validators (`npm run plugins:validate` in the deployment) and
+   the acceptance checklist in `COMPATIBILITY.md` before calling it released.
+
+For local development against a real Core instance, the same three steps apply
+to a local clone of the deployment repo with `npm run dev` — there is no
+standalone "plugin dev server".
