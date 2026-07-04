@@ -41,7 +41,7 @@ The future implementation plan may include these surfaces, each added in a separ
 7. Validators that check manifest, permissions, migrations, uninstall behavior, secrets, and naming conventions.
 8. Integration instructions for source inclusion plus one Core registry line.
 
-The current branch creates only the documentation for these surfaces.
+The current branch creates only the documentation for these surfaces. The canonical artifacts already exist as documentation and must be copied, not re-derived: `docs/MANIFEST.md` (manifest interface), `docs/SQL_TEMPLATES.md` (migration/RLS/uninstall SQL), `docs/SHARP_EDGES.md` (correctness rules). `ROADMAP.md` commits the slice sequence.
 
 ## Future install documentation requirements
 
@@ -49,7 +49,7 @@ A real plugin's install guide must explain:
 
 - source inclusion by copy or subtree under Core `plugins/{plugin_id}/`
 - one registry line in Core `config/plugins.ts`
-- migration installation by copying ordinal plugin migrations into Core's timestamped migration history
+- migration installation by copying ordinal plugin migrations into Core's timestamped migration history as `{YYYYMMDDHHMMSS}_plugin_{plugin_id}_{NNN}_{name}.sql` (install date supplies the timestamp; see `docs/SQL_TEMPLATES.md`)
 - validation through plugin commands and Core typecheck/build/validators once available
 - no runtime fetching, UI install flow, marketplace, or unreviewed remote code execution
 

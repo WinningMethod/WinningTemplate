@@ -17,7 +17,7 @@ This repository mirrors those docs; it does not override them. If WinningTemplat
 
 ## Current phase
 
-WinningTemplate is currently documentation/scaffold only. The approved scope is to document the future template contract without creating real plugin implementation code.
+WinningTemplate is in slice 1 of `ROADMAP.md`: documentation/scaffold only. The approved scope is to document the template contract; implementation follows the committed slice sequence in `ROADMAP.md`, each slice as its own reviewed PR — the documentation-only guardrail below applies until a roadmap slice PR lifts it for exactly the files that slice adds.
 
 ## Product rules
 

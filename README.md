@@ -24,7 +24,7 @@ This scaffold is grounded in these WinningMethod/winningOS source files:
 
 ## What WinningTemplate will become
 
-A future implementation pass may turn this documentation scaffold into an example plugin template. When that happens, it must still follow the `core-v0` contract:
+`ROADMAP.md` is the committed sequence for turning this scaffold into the working example plugin template that every future plugin is forked from (`PLUGIN_TEMPLATE_HANDOVER.md` in WinningOS defines that destination and its definition of done). When that happens, it must still follow the `core-v0` contract:
 
 - stable lowercase `snake_case` `plugin_id`
 - permission keys shaped as `plugin.{plugin_id}.{action}`
@@ -57,3 +57,7 @@ Until a reviewed implementation task explicitly authorizes it, do not add:
 - `docs/TEST_CASES.md` — acceptance tests for this documentation-only branch and future review gates.
 - `docs/REPO_STRUCTURE.md` — intended documentation-only and future plugin repo shape.
 - `docs/NON_GOALS.md` — explicit non-goals and out-of-scope work.
+- `docs/MANIFEST.md` — the mirrored `WinningOSPluginManifest` interface and field rules.
+- `docs/SQL_TEMPLATES.md` — the canonical migration/RLS/uninstall SQL idioms, to be copied verbatim in the implementation slice.
+- `docs/SHARP_EDGES.md` — the ten rules distilled from real WinningOS production bugs.
+- `ROADMAP.md` — the committed slice sequence from documentation scaffold to working template.
