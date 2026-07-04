@@ -4,22 +4,14 @@ This document records what WinningTemplate must not do in the current documentat
 
 Source documents used from WinningMethod/winningOS: `README.md`, `CORE.md`, `AGENTS.md`, `COMPATIBILITY.md`, `PLUGIN_TEMPLATE_HANDOVER.md`, and `IMPLEMENTATION_PLAN.md`.
 
-## Current branch non-goals
+## Current non-goals
 
-The documentation-scaffold phase (slice 1 in `ROADMAP.md`) does not create:
+The working template (slices 1–4 in `ROADMAP.md`) deliberately does not contain:
 
-- real plugin implementation code
-- real Supabase migrations
-- `db/uninstall.sql`
-- package files or lockfiles
-- Next.js, Supabase, or TypeScript app scaffolding
-- executable scripts or validators
-- generated UI components
+- business-specific workflows (the example notes feature demonstrates boundaries, nothing more)
+- a runnable app (plugin code executes only inside a Core deployment; standalone the repo typechecks and validates)
 - secrets, environment files, auth config, or provider setup
-- business-specific workflows
-- a pull request merge
-
-The branch exists to document the future template contract and make it reviewable.
+- the live Core integration proof (slice 5; requires WinningOS Core Phase 10)
 
 ## WinningTemplate non-goals
 

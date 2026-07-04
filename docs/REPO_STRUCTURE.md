@@ -4,73 +4,41 @@ This document defines the current documentation-only structure and the future pl
 
 Source documents used from WinningMethod/winningOS: `README.md`, `CORE.md`, `AGENTS.md`, `COMPATIBILITY.md`, `PLUGIN_TEMPLATE_HANDOVER.md`, and `IMPLEMENTATION_PLAN.md`.
 
-## Current documentation-only structure
-
-The documentation-scaffold phase (slice 1 in `ROADMAP.md`) should contain only Markdown documentation:
+## Repository structure (working template)
 
 ```text
-README.md
-AGENTS.md
-CREATING_A_PLUGIN.md
-IMPLEMENTATION.md
-docs/
-  CONTRACT_TRACEABILITY.md
-  TEST_CASES.md
-  REPO_STRUCTURE.md
-  NON_GOALS.md
+README.md                 quickstart + contract summary
+AGENTS.md                 repo rules for humans and agents
+CREATING_A_PLUGIN.md      the fork/rename flow
+IMPLEMENTATION.md         filled ten-point integration guide (example_plugin)
+ROADMAP.md                slice status; slice 5 pending Core Phase 10
+package.json              template toolchain (typecheck, validate, rename)
+tsconfig.json             maps ONLY @/core/plugins/api -> core-stub (barrel rule)
+plugin/                   THE INSTALLABLE SOURCE — the only folder that ships
+  manifest.ts             WinningOSPluginManifest export (single declaration source)
+  permissions.ts          PLUGIN_ID + typed permission constants
+  routes/                 route components Core mounts under /p/{plugin_id}
+  server/                 "use server" actions + server-only data access
+  components/             plugin UI pieces (as needed)
+  db/migrations/          001_init.sql ... (ordinals; install date adds timestamp)
+  db/uninstall.sql        explicit purge-data script (operator-run only)
+core-stub/                type-compatible stand-in for @/core/plugins/api
+                          (canonical Plugin API surface; NEVER installed)
+scripts/
+  validate-plugin.mjs     contract validators (npm run plugin:validate)
+  rename-plugin.mjs       one-shot template rename (npm run rename)
+docs/                     contract references (this folder)
 ```
 
-No implementation folders are required for this branch. Optional placeholder folders are allowed only when they contain a `README.md` and no implementation code, but this branch keeps the scaffold minimal.
+### Why `plugin/` instead of source at the repo root
 
-## Files intentionally absent in this branch
-
-The following are intentionally absent:
-
-```text
-package.json
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
-next.config.*
-tsconfig.json
-manifest.ts
-permissions.ts
-components/
-routes/
-server/
-db/migrations/
-db/uninstall.sql
-scripts/*.ts
-scripts/*.js
-app/
-```
-
-Their absence is part of the documentation-only acceptance criteria.
-
-## Future full plugin repo shape
-
-WinningOS `COMPATIBILITY.md` defines the future plugin repo shape as:
-
-```text
-README.md                 what it does, screenshots, status
-IMPLEMENTATION.md         integration guide
-manifest.ts               WinningOSPluginManifest export
-permissions.ts            permission-string constants
-components/               plugin UI
-routes/                   route components mounted by Core
-server/                   server actions and data access
-db/migrations/            ordinal plugin migrations
-db/uninstall.sql          explicit data-removal script
-tests/ or scripts/        validation commands
-```
-
-That future structure must not be added until a later implementation task explicitly authorizes real plugin scaffolding.
+Installation is `cp -R plugin/ {core}/plugins/{plugin_id}/` — one copy, nothing to exclude. Template tooling, stubs, lockfiles, and docs stay behind by construction, which keeps the deployment's `plugins/` folder pure reviewed source. This refines the original contract sketch (which listed `manifest.ts` at the repo root); WinningOS `COMPATIBILITY.md` should reflect the `plugin/` layout when next amended.
 
 ## Core integration shape
 
-Future plugin installation into WinningOS Core follows the build-time model:
+Plugins install into **deployment repos only** — clones of WinningOS Core owned by the deploying company (or scratch clones for integration tests). `WinningMethod/winningOS` and this template repo are pristine framework repos and never receive an install.
 
-1. Include reviewed source under Core `plugins/{plugin_id}/`.
+1. Include reviewed source under the deployment repo's `plugins/{plugin_id}/`.
 2. Add exactly one registry line to Core `config/plugins.ts`.
 3. Copy plugin ordinal migrations into Core's timestamped migration history.
 4. Run Core and plugin validation commands.

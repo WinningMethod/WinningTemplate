@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "paths": {
+      // The ONLY Core import path plugins may use (COMPATIBILITY.md core-v0).
+      // Standalone it resolves to the type-compatible stub; installed into a
+      // Core deployment it resolves to the real barrel. Any other "@/..."
+      // import fails typecheck here on purpose — that is the barrel rule
+      // being enforced by the template toolchain itself.
+      "@/core/plugins/api": ["./core-stub/plugins/api.tsx"]
+    }
+  },
+  "include": ["plugin/**/*.ts", "plugin/**/*.tsx", "core-stub/**/*.ts", "core-stub/**/*.tsx"],
+  "exclude": ["node_modules"]
+}

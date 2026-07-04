@@ -1,6 +1,8 @@
 # Creating a WinningOS Plugin From This Template
 
-This guide describes the future flow for turning WinningTemplate into a real plugin repository. It is intentionally documentation-only today; it does not create implementation code.
+This guide is the fork/rename flow for creating a real plugin from this template. The template is a working base: after the rename step, `npm run check` is green and you replace the example notes feature with your own, keeping the same structure.
+
+Remember the three-repository model: your plugin repo (this fork) and WinningOS Core stay pristine. The plugin is installed into a **deployment repo** — a clone of Core owned by the deploying company — never into the framework repos.
 
 Source documents used from WinningMethod/winningOS: `README.md`, `CORE.md`, `AGENTS.md`, `COMPATIBILITY.md`, `PLUGIN_TEMPLATE_HANDOVER.md`, and `IMPLEMENTATION_PLAN.md`.
 
@@ -11,10 +13,18 @@ Future plugin authors should create a new repository from WinningTemplate, then 
 Recommended flow:
 
 1. Create a new private plugin repo from this template.
-2. Choose a stable `plugin_id` before writing code.
-3. Rename all template references from the example/template identity to the real plugin identity.
-4. Fill out the plugin docs first.
-5. Only then add implementation code, migrations, validators, and package files in a reviewed implementation task.
+2. Choose a stable `plugin_id` before writing code (rules below).
+3. Run the rename script and verify the contract stays green:
+
+```bash
+npm install
+npm run rename -- your_plugin_id "Your Plugin Name"
+npm run check
+```
+
+4. Rewrite `IMPLEMENTATION.md` and `README.md` for your plugin.
+5. Replace the example notes feature (`plugin/routes/`, `plugin/server/`, `plugin/db/`) with your real feature, keeping the structure, the SQL idioms from `docs/SQL_TEMPLATES.md`, and the rules in `docs/SHARP_EDGES.md`.
+6. Keep `npm run check` green on every commit; extend `scripts/validate-plugin.mjs` with assertions for your own behavioral rules.
 
 The `plugin_id` is permanent after release because it is embedded in URLs, table names, permission strings, migrations, audit events, and external documentation.
 
@@ -31,7 +41,7 @@ Reserved ids from the `core-v0` contract include `core`, `plugin`, `plugins`, an
 
 ## 3. Rename checklist
 
-When a real plugin is created, rename every surface consistently:
+`npm run rename` rewrites the id-bearing surfaces across `plugin/` and `IMPLEMENTATION.md` mechanically. Afterwards verify the full checklist by hand (prose, screenshots, repo name are yours to update):
 
 - repository name and README title
 - `plugin_id`
