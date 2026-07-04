@@ -1,50 +1,27 @@
 # Test Cases
 
-This document records the acceptance tests for the WinningTemplate documentation/scaffold phase (slice 1 in `ROADMAP.md`) and the future review gates for real plugin implementation.
+This document records the acceptance tests for the working template (slices 1–4 in `ROADMAP.md`) and the review gates for plugins forked from it.
 
 Source documents used from WinningMethod/winningOS: `README.md`, `CORE.md`, `AGENTS.md`, `COMPATIBILITY.md`, `PLUGIN_TEMPLATE_HANDOVER.md`, and `IMPLEMENTATION_PLAN.md`.
 
-## Documentation-scaffold acceptance tests
+## Working-template acceptance tests
 
-Reviewer should verify the following:
-
-1. `WinningMethod/WinningTemplate` exists as a private repo.
-2. `WinningMethod/winningOS` has no changes from this workflow.
-3. The repo contains documentation/scaffold files only.
-4. No real plugin implementation code exists.
-5. No real Supabase migrations exist.
-6. No package/app scaffold exists.
-7. Docs cite the WinningOS source files used.
-8. `CREATING_A_PLUGIN.md` explains the future rename/fork flow.
-9. `IMPLEMENTATION.md` is a worked documentation plan, not implementation code.
-10. `docs/CONTRACT_TRACEABILITY.md` maps planned template surfaces back to WinningOS docs.
-11. `docs/TEST_CASES.md` includes these acceptance tests.
-
-## Suggested verification commands
-
-Run from the WinningTemplate repository root:
+Run from the repository root:
 
 ```bash
 git diff --check
-find . -path ./.git -prune -o -type f -print | sort
-find . -path ./.git -prune -o -type f ! -name '*.md' -print | sort
-find . -path ./.git -prune -o -type f \( -name 'package.json' -o -name 'package-lock.json' -o -name 'pnpm-lock.yaml' -o -name 'yarn.lock' -o -name 'next.config.*' -o -name 'tsconfig.json' -o -name '*.ts' -o -name '*.tsx' -o -name '*.js' -o -name '*.jsx' -o -name '*.sql' \) -print | sort
+npm install
+npm run check     # typecheck against core-stub + plugin:validate
 ```
 
-Expected result for the documentation-scaffold phase:
+Reviewer should verify:
 
-- `git diff --check` exits successfully.
-- File inventory contains only Markdown documentation files outside `.git`.
-- Non-Markdown inventory is empty.
-- Package/app/code/migration inventory is empty.
-
-Run from the WinningOS repository root or verify with a fresh clone/status check:
-
-```bash
-git status --short
-```
-
-Expected result: no changes from this workflow.
+1. `npm run check` passes untouched after a fresh clone.
+2. `npm run rename -- test_plugin "Test Plugin"` followed by `npm run check` also passes (rename keeps the contract green); discard the rename afterwards.
+3. Only `plugin/` is documented and used as installable source; tooling stays outside it.
+4. `core-stub/plugins/api.tsx` matches the Plugin API surface in WinningOS `PLUGIN_TEMPLATE_HANDOVER.md`/`COMPATIBILITY.md`.
+5. `IMPLEMENTATION.md` fills all ten contract points for `example_plugin`.
+6. `plugin/db/migrations/001_init.sql` and `db/uninstall.sql` follow `docs/SQL_TEMPLATES.md` idioms exactly (named-constraint conflicts, RLS in the creating migration, workspace scoping, approved seed points only).
 
 ## Future plugin implementation acceptance checklist
 

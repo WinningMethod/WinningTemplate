@@ -17,7 +17,7 @@ This repository mirrors those docs; it does not override them. If WinningTemplat
 
 ## Current phase
 
-WinningTemplate is in slice 1 of `ROADMAP.md`: documentation/scaffold only. The approved scope is to document the template contract; implementation follows the committed slice sequence in `ROADMAP.md`, each slice as its own reviewed PR — the documentation-only guardrail below applies until a roadmap slice PR lifts it for exactly the files that slice adds.
+WinningTemplate is a working template (`ROADMAP.md` slices 1–4 complete): typed manifest, permission constants, an RLS-guarded example feature, migrations, uninstall script, validators, and a rename script. Slice 5 (live integration proof) is pending WinningOS Core Phase 10. `npm run check` must stay green on every change.
 
 ## Product rules
 
@@ -28,18 +28,13 @@ WinningTemplate is in slice 1 of `ROADMAP.md`: documentation/scaffold only. The 
 - Plugins extend Core through reviewed source, one registry line, plugin-owned routes, plugin-owned permissions, and plugin-owned data.
 - Business-specific workflows do not belong in Core or in this generic template scaffold.
 
-## Documentation-only guardrail
+## Repository guardrails
 
-Do not add any of the following unless a later task explicitly authorizes implementation work:
-
-- package files or dependency manifests
-- generated app/framework scaffolds
-- real plugin source code
-- real Supabase migrations or uninstall SQL
-- executable validators or scripts
-- secrets, environment files, or auth/provider configuration
-
-Allowed work in this phase: Markdown documentation and documentation-only placeholder directories with their own `README.md` files.
+- Only `plugin/` ships into a Core deployment; keep tooling (`core-stub/`, `scripts/`, docs) outside it.
+- `core-stub/plugins/api.tsx` is the canonical `core-v0` Plugin API surface. Changing its exports or signatures is a compatibility-level conversation with WinningOS Core, never a casual edit.
+- Plugin source imports Core only via `@/core/plugins/api` (the tsconfig maps nothing else, so violations fail typecheck).
+- Never add secrets, `.env` files, or `NEXT_PUBLIC_` secret names.
+- Every behavioral contract rule belongs in `scripts/validate-plugin.mjs` as an assertion.
 
 ## Future plugin rules to preserve
 

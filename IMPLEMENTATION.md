@@ -1,121 +1,84 @@
-# WinningTemplate Implementation Plan
+# Example Plugin — Integration Guide
 
-This is a worked documentation plan for the future WinningTemplate implementation. It is not implementation code and does not authorize adding package files, app scaffolding, migrations, or executable validators in the current documentation-only branch.
+The worked `IMPLEMENTATION.md` required by WinningOS `COMPATIBILITY.md` (`core-v0`), filled in for `example_plugin` so template users have a real example, not a blank form. When you fork this template, rewrite every section for your plugin (start with `npm run rename -- your_plugin_id "Your Name"`).
 
-Source documents used from WinningMethod/winningOS: `README.md`, `CORE.md`, `AGENTS.md`, `COMPATIBILITY.md`, `PLUGIN_TEMPLATE_HANDOVER.md`, and `IMPLEMENTATION_PLAN.md`.
+## 1. What the plugin does
 
-## Purpose
+A deliberately boring workspace-scoped notes list: members with permission can view notes, create notes, and (with the manage grant) delete any note. It exists to exercise every `core-v0` contract surface — manifest, three permissions on the live grant map, one RLS-guarded table, navigation entry, settings panel, audit events, and three-level removal — with zero business complexity.
 
-WinningTemplate should become the starting point for future WinningOS build-time plugins. It must teach plugin authors how to satisfy the `core-v0` contract before they build real plugin behavior.
+## 2. Compatibility
 
-## Compatibility target
+`compatibility: core-v0`. Last verified against WinningOS Core: *(set the Core commit/tag here at each release; first live verification happens when Core Phase 10 ships — see `ROADMAP.md` slice 5).*
 
-```text
-core-v0
+## 3. Install steps
+
+```bash
+# 1. Bring the installable source (only the plugin/ folder ships):
+cp -R plugin/ {core-repo}/plugins/example_plugin/
+
+# 2. Register it — the ONE Core edit:
+#    In {core-repo}/config/plugins.ts:
+#      import examplePlugin from "@/plugins/example_plugin/manifest"
+#      export const installedPlugins = [examplePlugin]
+
+# 3. Install migrations (install date supplies the timestamp):
+cp plugin/db/migrations/001_init.sql \
+   {core-repo}/supabase/migrations/$(date +%Y%m%d%H%M%S)_plugin_example_plugin_001_init.sql
+cd {core-repo} && npx supabase db push
+
+# 4. Verify:
+npm run typecheck && npm run build && npm run plugins:validate
 ```
 
-`core-v0` is a compatibility level, not a product version. Future template implementation must treat compatibility drift as a reviewed contract change, not a silent edit.
+Everything outside `plugin/` (core-stub, scripts, docs, package files) is template tooling and is never copied into a deployment.
 
-## Future plugin identity
+## 4. Environment variables
 
-The template may use an example identity for demonstration, but a real plugin created from the template must choose a permanent lowercase `snake_case` `plugin_id` before implementation begins.
+None. A real plugin that needs secrets uses server-only names prefixed `PLUGIN_EXAMPLE_PLUGIN_*`, documents each one here, and never uses `NEXT_PUBLIC_*`.
 
-The chosen id drives:
+## 5. Tables and permissions
 
-- route prefix: `/p/{plugin_id}`
-- permission keys: `plugin.{plugin_id}.{action}`
-- database tables: `plugin_{plugin_id}_*`
-- audit event names: `plugin.{plugin_id}.{event}`
-- server-only env var prefix: `PLUGIN_{PLUGIN_ID}_*`
+Tables (all workspace-scoped, RLS enabled in the creating migration):
 
-## Planned future surfaces
+| Table | Public? | Purpose |
+|---|---|---|
+| `plugin_example_plugin_notes` | yes (`publicTables`) | The notes list; other plugins may `dependsOn` this plugin and foreign-key it |
 
-The future implementation plan may include these surfaces, each added in a separate reviewed slice:
+Permissions (registered by `001_init.sql`, deny-by-default, owner-editable in Settings → Roles):
 
-1. Plugin manifest documentation and, later, a real manifest export.
-2. Permission constant documentation and, later, typed permission constants.
-3. Route/component examples mounted only by Core under `/p/{plugin_id}`.
-4. Server/data examples that use Core-approved session and permission helpers.
-5. Database migration examples that create only plugin-owned tables and enable RLS immediately.
-6. Explicit uninstall documentation and, later, a destructive operator-run uninstall script.
-7. Validators that check manifest, permissions, migrations, uninstall behavior, secrets, and naming conventions.
-8. Integration instructions for source inclusion plus one Core registry line.
+| Key | Default roles |
+|---|---|
+| `plugin.example_plugin.view` | admin, member, viewer |
+| `plugin.example_plugin.create` | admin, member |
+| `plugin.example_plugin.manage` | admin |
 
-The current branch creates only the documentation for these surfaces. The canonical artifacts already exist as documentation and must be copied, not re-derived: `docs/MANIFEST.md` (manifest interface), `docs/SQL_TEMPLATES.md` (migration/RLS/uninstall SQL), `docs/SHARP_EDGES.md` (correctness rules). `ROADMAP.md` commits the slice sequence.
+**Core-side requirement:** the insert policy uses `private.core_current_profile_id()`, which Core must EXECUTE-grant to `authenticated` (WinningOS Phase 10, task 8). Without it, inserts fail loudly with `permission denied`.
 
-## Future install documentation requirements
+## 6. Navigation and settings
 
-A real plugin's install guide must explain:
+One nav entry ("Example", icon `StickyNote`, gated on `plugin.example_plugin.view`) rendered by Core in the Plugins sidebar group; one settings panel under Settings → Plugins → Example Plugin. Both come from `plugin/manifest.ts`; Core decides placement.
 
-- source inclusion by copy or subtree under Core `plugins/{plugin_id}/`
-- one registry line in Core `config/plugins.ts`
-- migration installation by copying ordinal plugin migrations into Core's timestamped migration history as `{YYYYMMDDHHMMSS}_plugin_{plugin_id}_{NNN}_{name}.sql` (install date supplies the timestamp; see `docs/SQL_TEMPLATES.md`)
-- validation through plugin commands and Core typecheck/build/validators once available
-- no runtime fetching, UI install flow, marketplace, or unreviewed remote code execution
+## 7. External integrations and secrets
 
-## Future data and permission plan
+None. The plugin talks only to the deployment's own Supabase project through Core's clients.
 
-Future plugin docs and implementation must list every permission and table.
+## 8. Validation commands
 
-Permissions must:
+```bash
+npm install
+npm run check        # typecheck (standalone, via core-stub) + plugin:validate
+```
 
-- use `plugin.{plugin_id}.{action}`
-- be registered by the plugin's first migration
-- be denied by default when not granted
-- be enforced by server/data boundaries, not just UI hiding
-- read the live Core grant map rather than hardcoding role behavior
+`plugin:validate` asserts the contract mechanically: manifest ↔ permissions ↔ migrations ↔ uninstall lockstep, RLS in creating migrations, workspace scoping, barrel-only Core imports, named-constraint conflicts, no `core_*` DDL, no slug resolution, no `NEXT_PUBLIC_` secrets, audit events namespaced. Migrations must additionally be executed against a real Supabase project before any release — statically valid SQL still fails live (WinningOS #49).
 
-Tables must:
+## 9. Removal
 
-- use `plugin_{plugin_id}_*`
-- include `workspace_id` references to Core workspaces
-- include `created_at` and `updated_at` conventions where appropriate
-- enable RLS in the same migration that creates the table
-- reference Core profile/membership identity rather than `auth.users` directly
-- avoid changing Core tables or private schemas
+1. **Disable** — delete the registry line from `config/plugins.ts`. `/p/example_plugin` 404s, the nav entry and settings panel disappear, Core builds. Data and grants remain.
+2. **Remove source** — also delete `plugins/example_plugin/`.
+3. **Purge data** — operator explicitly runs `plugin/db/uninstall.sql` (drops the notes table, deletes this plugin's permission and grant rows). Never automatic. If other plugins `dependsOn` this one, run their uninstall scripts first.
 
-## Future navigation and settings plan
+## 10. Known limitations
 
-Core owns the shell and final rendering. A plugin may request navigation and settings entries through its manifest, but Core decides placement, permission-gates entries, and removes them when the registry line is removed.
-
-A plugin must not:
-
-- replace Core navigation
-- reorder Core Home, Members, or Settings entries
-- add workspace switching or auth controls
-- put provider/API-key fields into Core-owned settings areas
-- render outside its `/p/{plugin_id}` subtree except via declared settings panels
-
-## Future removal plan
-
-The template must teach three explicit removal levels:
-
-1. Disable: remove the registry line.
-2. Remove source: delete `plugins/{plugin_id}/` after disabling.
-3. Purge data: explicitly run the plugin's uninstall SQL.
-
-Disable and remove-source must not automatically delete data. Purge-data is operator-owned, destructive, and reviewed separately.
-
-## Future validation plan
-
-Future validators should assert the documented contract instead of relying on reviewer memory. Planned checks include:
-
-- manifest compatibility equals `core-v0`
-- manifest permissions match permission constants and migrations
-- manifest tables match migrations and uninstall script
-- RLS is enabled for every plugin table
-- no `NEXT_PUBLIC_` secret names are used for server secrets
-- no plugin migration alters Core tables or private schemas
-- workspace resolution does not depend on mutable slugs
-- cross-plugin dependencies reference declared `publicTables`
-- disable-level removal is documented and testable
-
-## Known limitations of this branch
-
-- No plugin code exists.
-- No migrations exist.
-- No validators exist.
-- No package manager or framework scaffold exists.
-- Core Phase 10 host primitives are documented as future surfaces, not consumed here.
-
-This is deliberate. The current deliverable is a reviewer-ready documentation scaffold only.
+- Standalone, this repo typechecks against `core-stub/` (the canonical Phase 10 API surface) but does not run; plugin code executes only inside a Core deployment.
+- Live integration proof is pending WinningOS Core Phase 10 (registry, host route, API barrel) — `ROADMAP.md` slice 5.
+- The notes UI is intentionally minimal; it demonstrates boundaries, not product polish.
