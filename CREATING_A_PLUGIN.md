@@ -2,6 +2,8 @@
 
 This guide is the fork/rename flow for creating a real plugin from this template. The template is a working base: after the rename step, `npm run check` is green and you replace the example notes feature with your own, keeping the same structure.
 
+Remember the three-repository model: your plugin repo (this fork) and WinningOS Core stay pristine. The plugin is installed into a **deployment repo** — a clone of Core owned by the deploying company — never into the framework repos.
+
 Source documents used from WinningMethod/winningOS: `README.md`, `CORE.md`, `AGENTS.md`, `COMPATIBILITY.md`, `PLUGIN_TEMPLATE_HANDOVER.md`, and `IMPLEMENTATION_PLAN.md`.
 
 ## 1. Start by forking or copying the template

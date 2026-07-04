@@ -36,9 +36,9 @@ Installation is `cp -R plugin/ {core}/plugins/{plugin_id}/` — one copy, nothin
 
 ## Core integration shape
 
-Future plugin installation into WinningOS Core follows the build-time model:
+Plugins install into **deployment repos only** — clones of WinningOS Core owned by the deploying company (or scratch clones for integration tests). `WinningMethod/winningOS` and this template repo are pristine framework repos and never receive an install.
 
-1. Include reviewed source under Core `plugins/{plugin_id}/`.
+1. Include reviewed source under the deployment repo's `plugins/{plugin_id}/`.
 2. Add exactly one registry line to Core `config/plugins.ts`.
 3. Copy plugin ordinal migrations into Core's timestamped migration history.
 4. Run Core and plugin validation commands.

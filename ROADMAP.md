@@ -25,7 +25,7 @@ A deliberately boring workspace-scoped notes list (create / view / manage) exerc
 
 ## Slice 5 — Integration proof — PENDING (requires Core Phase 10)
 
-Install the template into a real Core deployment: copy source to `plugins/example_plugin/`, one registry line in `config/plugins.ts`, install migrations, `db push`, run Core's acceptance checklist from `COMPATIBILITY.md`, verify disable-level removal (delete the registry line → Core builds, `/p/example_plugin` 404s, nav gone). File issues against whichever repo violates the contract — the contract wins arguments; PRs change the contract.
+Create a **scratch deployment repo** (third repo: clone of WinningOS Core; never install into the Core or template framework repos) and install the template there: copy `plugin/` to `plugins/example_plugin/`, one registry line in `config/plugins.ts`, install migrations, `db push`, run Core's acceptance checklist from `COMPATIBILITY.md`, verify disable-level removal (delete the registry line → Core builds, `/p/example_plugin` 404s, nav gone). File issues against whichever repo violates the contract — the contract wins arguments; PRs change the contract.
 
 ## Definition of done (from the handover)
 

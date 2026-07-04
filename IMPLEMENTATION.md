@@ -12,19 +12,24 @@ A deliberately boring workspace-scoped notes list: members with permission can v
 
 ## 3. Install steps
 
+Installs target a **deployment repo** — a third repo created by cloning WinningOS Core, one per company OS (or a throwaway scratch clone for integration testing). Never install into `WinningMethod/winningOS` or this template repo; both stay pristine framework repos (three-repository model in WinningOS `COMPATIBILITY.md`).
+
 ```bash
+# 0. Have a deployment repo: a clone of WinningOS Core with its own
+#    Supabase project and hosting (e.g. acme-os).
+
 # 1. Bring the installable source (only the plugin/ folder ships):
-cp -R plugin/ {core-repo}/plugins/example_plugin/
+cp -R plugin/ {deployment-repo}/plugins/example_plugin/
 
 # 2. Register it — the ONE Core edit:
-#    In {core-repo}/config/plugins.ts:
+#    In {deployment-repo}/config/plugins.ts:
 #      import examplePlugin from "@/plugins/example_plugin/manifest"
 #      export const installedPlugins = [examplePlugin]
 
 # 3. Install migrations (install date supplies the timestamp):
 cp plugin/db/migrations/001_init.sql \
-   {core-repo}/supabase/migrations/$(date +%Y%m%d%H%M%S)_plugin_example_plugin_001_init.sql
-cd {core-repo} && npx supabase db push
+   {deployment-repo}/supabase/migrations/$(date +%Y%m%d%H%M%S)_plugin_example_plugin_001_init.sql
+cd {deployment-repo} && npx supabase db push
 
 # 4. Verify:
 npm run typecheck && npm run build && npm run plugins:validate

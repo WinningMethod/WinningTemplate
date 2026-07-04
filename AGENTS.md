@@ -30,7 +30,8 @@ WinningTemplate is a working template (`ROADMAP.md` slices 1–4 complete): type
 
 ## Repository guardrails
 
-- Only `plugin/` ships into a Core deployment; keep tooling (`core-stub/`, `scripts/`, docs) outside it.
+- Three-repository rule: this template and WinningOS Core are pristine framework repos. Plugins install only into separate deployment repos (clones of Core). Never vendor Core into this repo, and never install this plugin into `WinningMethod/winningOS` — integration proofs use a throwaway scratch deployment repo.
+- Only `plugin/` ships into a deployment; keep tooling (`core-stub/`, `scripts/`, docs) outside it.
 - `core-stub/plugins/api.tsx` is the canonical `core-v0` Plugin API surface. Changing its exports or signatures is a compatibility-level conversation with WinningOS Core, never a casual edit.
 - Plugin source imports Core only via `@/core/plugins/api` (the tsconfig maps nothing else, so violations fail typecheck).
 - Never add secrets, `.env` files, or `NEXT_PUBLIC_` secret names.

@@ -13,7 +13,7 @@ npm run check                       # still green after the rename
 # now replace the example notes feature with yours, keeping the structure
 ```
 
-Only the `plugin/` folder ever ships into a Core deployment. `core-stub/`, `scripts/`, `docs/`, and the package files are template tooling.
+Only the `plugin/` folder ever ships — and it ships into a **deployment repo** (a third repo cloned from WinningOS Core, one per company OS), never into the Core or template framework repos themselves (three-repository model in WinningOS `COMPATIBILITY.md`). `core-stub/`, `scripts/`, `docs/`, and the package files are template tooling.
 
 ## Current status
 
