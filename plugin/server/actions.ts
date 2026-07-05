@@ -67,7 +67,7 @@ export async function createNote(formData: FormData): Promise<never> {
 
 /**
  * Delete any note. Gated on plugin.example_plugin.manage; the RLS delete
- * policy re-enforces author-or-manage server-side.
+ * policy re-enforces the same manage grant server-side.
  */
 export async function deleteNote(formData: FormData): Promise<never> {
   const noteId = readTrimmedString(formData, "noteId")

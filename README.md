@@ -17,11 +17,11 @@ Only the `plugin/` folder ever ships — and it ships into a **deployment repo**
 
 ## Current status
 
-- Scope: working template (`ROADMAP.md` slices 1–4 complete).
+- Scope: working, live-proven template (`ROADMAP.md` slices 1–5 complete).
 - Compatibility target: `core-v0`.
 - Plugin model: source-level modules included at build time, not runtime marketplace extensions.
 - Standalone: typechecks against `core-stub/` (the canonical Plugin API surface) and passes `plugin:validate`; runs only inside a Core deployment.
-- Pending: live integration proof once WinningOS Core ships Phase 10 (`ROADMAP.md` slice 5).
+- Live-proven: AcmeCo deployment acceptance run passed 39/39 checks on a dedicated Supabase project (AcmeCo issue #1).
 
 ## WinningOS source documents
 

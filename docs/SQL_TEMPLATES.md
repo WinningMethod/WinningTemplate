@@ -68,10 +68,12 @@ create policy "Members with create can insert their own example notes"
     private.core_current_member_has_permission(workspace_id, 'plugin.example_plugin.create')
     and author_profile_id = private.core_current_profile_id()
   );
--- update/delete: author-or-manage pattern, same helpers.
+-- update: author-or-manage pattern, same helpers.
+-- delete: manage-only (issue #6) — the permission named for an action is the
+-- boundary at EVERY layer; do not make RLS wider than the app-layer gate.
 ```
 
-Privilege caveat: `private.core_current_member_has_permission` and `private.core_is_active_member` are already EXECUTE-granted to `authenticated`. `private.core_current_profile_id` is **not yet** — if a policy needs it (the insert policy above does), that grant is a Core Phase 10 line item to confirm during integration. A plugin migration must never grant it itself; the alternative is gating inserts on permission only and setting `author_profile_id` server-side from `ensureCoreSession`.
+Privilege caveat: `private.core_current_member_has_permission`, `private.core_is_active_member`, and `private.core_current_profile_id` are all EXECUTE-granted to `authenticated` (the profile-id grant shipped with Core Phase 10, migration `20260704210000`). Use these three helpers verbatim; a plugin migration must never grant additional `private.*` helpers itself.
 
 ## Cross-plugin foreign keys (only with a declared dependency)
 

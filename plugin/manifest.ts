@@ -13,7 +13,7 @@ import { ExamplePluginSettingsPanel } from "./routes/settings-panel"
 const manifest: WinningOSPluginManifest = {
   id: PLUGIN_ID,
   name: "Example Plugin",
-  version: "0.1.0",
+  version: "0.1.1",
   compatibility: "core-v0",
 
   permissions: [
