@@ -48,8 +48,11 @@ export async function NotesPage({
         description="The reference feature every WinningOS plugin is forked from: a workspace-scoped list with live-grant permissions, RLS, and audit events."
         actions={
           canCreate ? (
-            <Link href="/p/example_plugin/new">
-              <Button>New note</Button>
+            <Link
+              href="/p/example_plugin/new"
+              className="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              New note
             </Link>
           ) : undefined
         }
@@ -77,6 +80,7 @@ export async function NotesPage({
               {notes.map((note) => (
                 <li key={note.id}>
                   <strong>{note.title}</strong> — {note.body || "(no body)"}{" "}
+                  <span>by {note.authorName}</span>{" "}
                   <span>{formatDate(note.createdAt)}</span>
                   {canManage && (
                     <form action={deleteNote}>

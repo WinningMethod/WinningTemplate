@@ -23,9 +23,11 @@ A deliberately boring workspace-scoped notes list (create / view / manage) exerc
 - `npm run plugin:validate` (string-assertion style, mirroring Core): manifest ↔ permissions ↔ migrations ↔ uninstall lockstep; RLS enabled in creating migrations; no `NEXT_PUBLIC_` secrets; no `core_` DDL; no slug resolution; named-constraint conflicts only; every `docs/SHARP_EDGES.md` rule that can be asserted, asserted.
 - `CREATING_A_PLUGIN.md` gains the executable rename checklist verification.
 
-## Slice 5 — Integration proof — PENDING (requires Core Phase 10)
+## Slice 5 — Integration proof — DONE
 
 Create a **scratch deployment repo** (third repo: clone of WinningOS Core; never install into the Core or template framework repos) and install the template there: copy `plugin/` to `plugins/example_plugin/`, one registry line in `config/plugins.ts`, install migrations, `db push`, run Core's acceptance checklist from `COMPATIBILITY.md`, verify disable-level removal (delete the registry line → Core builds, `/p/example_plugin` 404s, nav gone). File issues against whichever repo violates the contract — the contract wins arguments; PRs change the contract.
+
+Outcome (2026-07-05): proven live on the AcmeCo deployment repo against a dedicated Supabase project (AcmeCo issue #1: 32/32 acceptance checks + 7/7 disable-level removal checks). The run filed and fixed issues #5 (author display name) and #6 (delete RLS wider than the manage gate) — corrected here as migration `002_require_manage_for_delete` and plugin v0.1.1.
 
 ## Definition of done (from the handover)
 
