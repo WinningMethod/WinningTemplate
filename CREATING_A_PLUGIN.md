@@ -8,27 +8,40 @@ Source documents used from WinningMethod/winningOS: `README.md`, `CORE.md`, `AGE
 
 ## 0. Pick the repo's ecosystem role first
 
-Core's `ECOSYSTEM.md` defines the three roles a plugin repository can play.
+Core's `ECOSYSTEM.md` defines the four roles a plugin repository can play.
 Decide which one this repo is before choosing a name or writing code — the
 role dictates what the repo may own, write, and depend on:
 
 - **Tables (data owner)** — owns a domain's schema, the single source of
-  truth; declares `publicTables` as its stable interface. Synced-data owners
-  (external API upstream) ship only a raw-data browser + settings; owners of
-  user-typed content ship their full CRUD UX. One per domain. Naming:
+  truth AND the domain's ingestion point (API syncs, webhooks, lead forms);
+  declares `publicTables` as its stable interface. Synced-data owners
+  (external API upstream, engine-only writes) ship only a raw-data browser +
+  settings; user-content owners ship a reference CRUD and — the load-bearing
+  rule — enforce their semantic invariants in the DATABASE (checks, FKs,
+  triggers) so multiple writers can never drift. One per domain. Naming:
   `Winning{Domain}Tables`.
+- **App (working surface)** — a full read/write product UX on a
+  user-content owner's data layer. `dependsOn` the owner; writes go through
+  the user client under the OWNER's RLS write policies (its edit/manage
+  grants) — the same path the owner's own CRUD takes. Owns only its own
+  UI-state tables; never adds columns/tables/triggers to the owner's domain.
+  Naming: `Winning{Domain}App`.
 - **Viewer (skin)** — presents a Tables owner's data. `dependsOn` the owner,
   reads only its `publicTables`, and is **strictly read-only over them** —
   it owns at most its own settings tables, declares no `publicTables`, and
   never calls the owner's upstream API. Any number of viewers can stack on
   one owner. Naming: `Winning{Domain}Viewer`, `Winning{Domain}Viewer2`, …
 - **Bridge (join)** — relates two owners' data. `dependsOn` both, owns only
-  the join/attachment tables that foreign-key each owner's `publicTables`.
-  Naming: `Winning{A}{B}Bridge`.
+  the join/attachment tables that foreign-key each owner's `publicTables`,
+  and ships its presentation as manifest `modules` mounted into slots that
+  host Apps/Viewers declare (`resolveSlotModules` renders them,
+  permission-filtered). Naming: `Winning{A}{B}Bridge`.
 
 If the repo seems to need two roles, it is two repos. State the chosen role
 in the first paragraph of your `IMPLEMENTATION.md` — the acceptance review
-checks the repo against that role's rules.
+checks the repo against that role's rules. Apps and Viewers should declare
+manifest `slots` at their natural extension points so future Bridges can
+surface joined data inside them.
 
 ## 1. Start by forking or copying the template
 

@@ -29,6 +29,23 @@ export type CoreRoleKey = "owner" | "admin" | "member" | "viewer"
 
 export type PluginPermissionKey = `plugin.${string}.${string}`
 
+/**
+ * Props every slot module receives from its host (ECOSYSTEM.md "Modules").
+ * The host documents each slot's context shape in its IMPLEMENTATION.md.
+ */
+export type PluginModuleProps = {
+  context?: Record<string, unknown>
+}
+
+/** One permission-filtered module contribution, as resolveSlotModules returns it. */
+export type PluginSlotModule = {
+  /** The contributing plugin's id. */
+  pluginId: string
+  title: string
+  component: React.ComponentType<PluginModuleProps>
+  permission: PluginPermissionKey
+}
+
 export type CoreSessionStatus = "unauthenticated" | "ready" | "pending_access"
 
 export type CoreSession = {
@@ -88,6 +105,32 @@ export type WinningOSPluginManifest = {
    * uninstalled after, and expose what this plugin uses via publicTables.
    */
   dependsOn?: { pluginId: string; minVersion: string }[]
+  /**
+   * Named extension points this plugin's UI offers to other plugins
+   * (ECOSYSTEM.md "Modules"). Contributors target `{this_plugin_id}:{slot id}`;
+   * the host renders contributions via `resolveSlotModules` and documents each
+   * slot's context shape in its IMPLEMENTATION.md.
+   */
+  slots?: {
+    /** Slot name, lowercase snake_case, unique within this plugin. */
+    id: string
+    /** Where it renders and what context the host passes. */
+    description: string
+  }[]
+  /**
+   * Components this plugin mounts into other plugins' declared slots
+   * (`{host_plugin_id}:{slot_id}`). A module renders only when the host is
+   * installed, declares the slot, and the member holds `permission` (owned by
+   * the CONTRIBUTING plugin, not the host).
+   */
+  modules?: {
+    /** Target slot: `{host_plugin_id}:{slot_id}`. */
+    slot: string
+    /** Short heading the host may render above the module. */
+    title: string
+    component: React.ComponentType<PluginModuleProps>
+    permission: PluginPermissionKey
+  }[]
 }
 
 // ---------------------------------------------------------------------------
@@ -107,6 +150,16 @@ export async function roleHasPluginPermission(
   _roleKey: string | null | undefined,
   _permission: PluginPermissionKey,
 ): Promise<boolean> {
+  throw new Error(STUB_ERROR)
+}
+
+/**
+ * Modules the CURRENT member may see in a slot (`{host_plugin_id}:{slot_id}`):
+ * installed contributions filtered by each module's own permission against the
+ * live grant map. Hosts call this from the server component rendering the slot
+ * and pass each module its documented context. Empty result = render nothing.
+ */
+export async function resolveSlotModules(_slotId: string): Promise<PluginSlotModule[]> {
   throw new Error(STUB_ERROR)
 }
 
