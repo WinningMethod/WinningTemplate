@@ -6,6 +6,30 @@ Remember the three-repository model: your plugin repo (this fork) and WinningOS 
 
 Source documents used from WinningMethod/winningOS: `README.md`, `CORE.md`, `AGENTS.md`, `COMPATIBILITY.md`, `PLUGIN_TEMPLATE_HANDOVER.md`, and `IMPLEMENTATION_PLAN.md`.
 
+## 0. Pick the repo's ecosystem role first
+
+Core's `ECOSYSTEM.md` defines the three roles a plugin repository can play.
+Decide which one this repo is before choosing a name or writing code — the
+role dictates what the repo may own, write, and depend on:
+
+- **Tables (data owner)** — owns a domain's schema, the single source of
+  truth; declares `publicTables` as its stable interface. Synced-data owners
+  (external API upstream) ship only a raw-data browser + settings; owners of
+  user-typed content ship their full CRUD UX. One per domain. Naming:
+  `Winning{Domain}Tables`.
+- **Viewer (skin)** — presents a Tables owner's data. `dependsOn` the owner,
+  reads only its `publicTables`, and is **strictly read-only over them** —
+  it owns at most its own settings tables, declares no `publicTables`, and
+  never calls the owner's upstream API. Any number of viewers can stack on
+  one owner. Naming: `Winning{Domain}Viewer`, `Winning{Domain}Viewer2`, …
+- **Bridge (join)** — relates two owners' data. `dependsOn` both, owns only
+  the join/attachment tables that foreign-key each owner's `publicTables`.
+  Naming: `Winning{A}{B}Bridge`.
+
+If the repo seems to need two roles, it is two repos. State the chosen role
+in the first paragraph of your `IMPLEMENTATION.md` — the acceptance review
+checks the repo against that role's rules.
+
 ## 1. Start by forking or copying the template
 
 Future plugin authors should create a new repository from WinningTemplate, then rename every template placeholder before writing plugin behavior.
@@ -103,6 +127,9 @@ Every plugin must enforce security outside the UI:
 - avoid touching `core_*`, private schema, or another plugin's private tables
 
 ## 8. Dependency and shared data decisions
+
+These mechanics serve the roles defined in Core's `ECOSYSTEM.md` (Tables
+owners, Viewers, Bridges) — start there, then apply the rules below.
 
 When a plugin needs data owned by another plugin, choose deliberately:
 
