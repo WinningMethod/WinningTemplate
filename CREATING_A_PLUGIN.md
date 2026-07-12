@@ -104,7 +104,7 @@ A real plugin's `IMPLEMENTATION.md` must state the ten points required by Winnin
 3. exact install steps, including source inclusion, one registry edit, and migration install command
 4. required environment variables and which are server-only
 5. every table and permission registered by the plugin
-6. requested navigation and settings entries
+6. requested navigation and settings entries, including the `navRollup` declaration when the plugin is a satellite (Viewer/Bridge/Connector) — satellites roll their nav entries up under their host's primary entry instead of adding top-level sidebar entries (see `docs/MANIFEST.md` sidebar rule)
 7. external integrations and where secrets live
 8. validation commands
 9. removal at disable, remove-source, and purge-data levels
