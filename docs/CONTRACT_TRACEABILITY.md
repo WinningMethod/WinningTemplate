@@ -25,7 +25,7 @@ Source documents cited:
 | Table naming | Plugin-owned tables use `plugin_{plugin_id}_*` and include workspace scoping. | `COMPATIBILITY.md`, `PLUGIN_TEMPLATE_HANDOVER.md` |
 | RLS expectations | Plugin tables enable RLS in the creating migration; RLS/RPC/server enforcement is required. | `CORE.md`, `COMPATIBILITY.md`, `PLUGIN_TEMPLATE_HANDOVER.md` |
 | Core ownership boundary | Core owns shell, auth, workspace, membership, permissions, theme, and navigation. | `CORE.md`, `COMPATIBILITY.md`, `IMPLEMENTATION_PLAN.md` |
-| Navigation/settings | Plugins request entries through the manifest; Core renders and gates them. | `COMPATIBILITY.md`, `IMPLEMENTATION_PLAN.md` |
+| Navigation/settings | Plugins request entries through the manifest; Core renders and gates them. Satellites declare `navRollup: { into: host }` so their entries roll up under the host's primary entry. | `COMPATIBILITY.md`, `IMPLEMENTATION_PLAN.md` |
 | Installation model | Source inclusion under Core `plugins/{plugin_id}/` plus exactly one registry line in `config/plugins.ts`; no auto-fetch or UI install. | `COMPATIBILITY.md`, `IMPLEMENTATION_PLAN.md` |
 | Plugin API boundary | Future plugins import Core only through `@/core/plugins/api`. | `COMPATIBILITY.md`, `IMPLEMENTATION_PLAN.md`, `PLUGIN_TEMPLATE_HANDOVER.md` |
 | Secrets | Plugin secrets are server-only and named with `PLUGIN_{PLUGIN_ID}_*`; no `NEXT_PUBLIC_*` secrets. | `COMPATIBILITY.md`, `PLUGIN_TEMPLATE_HANDOVER.md` |

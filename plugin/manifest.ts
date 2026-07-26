@@ -46,6 +46,12 @@ const manifest: WinningOSPluginManifest = {
     },
   ],
 
+  // Satellite plugins (Viewers, Bridges, Connectors — anything orbiting a
+  // domain owner) also declare navRollup so their entries render as dropdown
+  // children of the host's primary nav entry instead of top-level sidebar
+  // entries. Example: navRollup: { into: "crm" }
+  // This template plugin is its own host, so it declares none.
+
   routes: {
     "": NotesPage,
     "/new": NewNotePage,
