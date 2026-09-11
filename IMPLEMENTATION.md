@@ -33,10 +33,21 @@ cp -R plugin/ {deployment-repo}/plugins/example_plugin/
 #      import examplePlugin from "@/plugins/example_plugin/manifest"
 #      export const installedPlugins = [examplePlugin]
 
-# 3. Install migrations (install date supplies the timestamp):
-cp plugin/db/migrations/001_init.sql \
-   {deployment-repo}/supabase/migrations/$(date +%Y%m%d%H%M%S)_plugin_example_plugin_001_init.sql
-cd {deployment-repo} && npx supabase db push
+# 3. Install ALL ordinal migrations in order, after reviewing timestamp conflicts.
+# Run from this template checkout; use a fresh minute prefix for this install.
+set -e
+migration_prefix=$(date -u +%Y%m%d%H%M)
+for item in 00:001_init.sql 01:002_require_manage_for_delete.sql; do
+  migration_file=${item#*:}
+  migration_second=${item%%:*}
+  destination="{deployment-repo}/supabase/migrations/${migration_prefix}${migration_second}_plugin_example_plugin_${migration_file}"
+  test ! -e "$destination"
+  cp "plugin/db/migrations/$migration_file" "$destination"
+done
+# Confirm the intended isolated project and migration order before applying SQL.
+cd {deployment-repo}
+npx supabase migration list
+npx supabase db push
 
 # 4. Verify:
 npm run typecheck && npm run build && npm run plugins:validate
