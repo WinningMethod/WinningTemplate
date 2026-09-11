@@ -216,8 +216,8 @@ type WithChildren<T = object> = T & { children?: React.ReactNode; className?: st
 export function Button(
   _props: WithChildren<
     React.ButtonHTMLAttributes<HTMLButtonElement> & {
-      variant?: "primary" | "outline" | "ghost" | "destructive"
-      size?: "sm" | "default" | "lg" | "icon"
+      variant?: "primary" | "secondary" | "outline" | "ghost" | "destructive"
+      size?: "sm" | "md" | "default" | "lg" | "icon"
     }
   >,
 ): React.ReactNode {
@@ -232,7 +232,7 @@ export function CardHeader(_props: WithChildren): React.ReactNode {
   throw new Error(STUB_ERROR)
 }
 
-export function CardTitle(_props: WithChildren): React.ReactNode {
+export function CardTitle(_props: WithChildren<React.HTMLAttributes<HTMLHeadingElement> & { as?: "h2" | "h3" | "h4" }>): React.ReactNode {
   throw new Error(STUB_ERROR)
 }
 
@@ -312,3 +312,10 @@ export function SubmitButton(_props: Omit<React.ButtonHTMLAttributes<HTMLButtonE
   size?: "sm" | "md" | "lg" | "icon"
   pendingLabel?: string
 }): React.ReactNode { throw new Error(STUB_ERROR) }
+
+export function FilterOptions(_props: { children: React.ReactNode; activeCount?: number }): React.ReactNode { throw new Error(STUB_ERROR) }
+export function SourceBrowser(_props: {
+  label: string; items: { key: string; name: string; description: string; href: string }[]
+  selected: string; children: React.ReactNode; countLabel?: string
+}): React.ReactNode { throw new Error(STUB_ERROR) }
+export function DetailDrawer(_props: { title: string; closeHref: string; children: React.ReactNode }): React.ReactNode { throw new Error(STUB_ERROR) }

@@ -10,7 +10,7 @@ A deliberately boring workspace-scoped notes list: members with permission can v
 
 `compatibility: core-v0`; `minCoreVersion: 0.2.0`.
 
-Verified Core revision: `4724e52b5a06c3abf488804a6911b9086be3a8ad` (paired WinningOS PR;
+Verified Core revision: `02931a44b2158f5dd7d842f13a82b2fa151089b5` (paired WinningOS PR;
 2026-09-11). Credential-free API parity, install, disable, source removal,
 reinstall, and installed/removed Next builds passed against this template
 source. Record this template PR commit alongside the Core commit in release
