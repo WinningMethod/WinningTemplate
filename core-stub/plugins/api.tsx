@@ -66,6 +66,12 @@ export type WinningOSPluginManifest = {
   version: string
   /** Compatibility level this plugin was built and verified against. */
   compatibility: "core-v0"
+  /** Minimum Core release; new portability features require 0.2.0. */
+  minCoreVersion?: string
+  /** Explicit public code entrypoints, relative to the plugin folder. */
+  publicApi?: string[]
+  /** Authenticated machine entrypoints, dispatched only while installed. */
+  jobs?: Record<string, PluginJob>
   /** Every permission the plugin registers. Format: plugin.{id}.{action}. */
   permissions: {
     key: PluginPermissionKey
@@ -214,54 +220,95 @@ export function Button(
       size?: "sm" | "default" | "lg" | "icon"
     }
   >,
-): React.ReactElement {
+): React.ReactNode {
   throw new Error(STUB_ERROR)
 }
 
-export function Card(_props: WithChildren): React.ReactElement {
+export function Card(_props: WithChildren): React.ReactNode {
   throw new Error(STUB_ERROR)
 }
 
-export function CardHeader(_props: WithChildren): React.ReactElement {
+export function CardHeader(_props: WithChildren): React.ReactNode {
   throw new Error(STUB_ERROR)
 }
 
-export function CardTitle(_props: WithChildren): React.ReactElement {
+export function CardTitle(_props: WithChildren): React.ReactNode {
   throw new Error(STUB_ERROR)
 }
 
-export function CardDescription(_props: WithChildren): React.ReactElement {
+export function CardDescription(_props: WithChildren): React.ReactNode {
   throw new Error(STUB_ERROR)
 }
 
-export function CardContent(_props: WithChildren): React.ReactElement {
+export function CardContent(_props: WithChildren): React.ReactNode {
   throw new Error(STUB_ERROR)
 }
 
 export function Badge(
   _props: WithChildren<{ tone?: "success" | "warning" | "muted" | "danger" }>,
-): React.ReactElement {
+): React.ReactNode {
   throw new Error(STUB_ERROR)
 }
 
 export function Input(
   _props: React.InputHTMLAttributes<HTMLInputElement>,
-): React.ReactElement {
+): React.ReactNode {
   throw new Error(STUB_ERROR)
 }
 
 export function Label(
   _props: WithChildren<React.LabelHTMLAttributes<HTMLLabelElement>>,
-): React.ReactElement {
+): React.ReactNode {
   throw new Error(STUB_ERROR)
 }
 
-export function PageContainer(_props: WithChildren): React.ReactElement {
+export function PageContainer(_props: WithChildren): React.ReactNode {
   throw new Error(STUB_ERROR)
 }
 
 export function PageHeader(
   _props: WithChildren<{ title: string; description?: string; actions?: React.ReactNode }>,
-): React.ReactElement {
+): React.ReactNode {
   throw new Error(STUB_ERROR)
 }
+
+/** Jobs accept no caller-controlled payload. Interactive actions still use live grants. */
+export type PluginJob = {
+  /** Plugin-scoped server-only bearer secret, e.g. PLUGIN_MY_PLUGIN_CRON_SECRET. */
+  secretEnv: string
+  /** Bounded, idempotent engine; never assumes Core provides retries or locking. */
+  run: () => Promise<void>
+}
+
+/** Deployment-owned aliases contain metadata only, never imported plugin code. */
+export type PluginRouteAlias = {
+  path: string
+  pluginId: string
+  route: string
+}
+
+export type FormActionResult = { status: "saved" | "error"; message: string; code?: string; href?: string; linkLabel?: string }
+export function ActionForm(_props: {
+  action: (formData: FormData) => Promise<FormActionResult>
+  label: string; children: React.ReactNode; id?: string; className?: string; fieldsClassName?: string
+  confirmMessage?: string; resetLabel?: string; guardDraft?: boolean
+}): React.ReactNode { throw new Error(STUB_ERROR) }
+export function ConfirmForm(_props: {
+  action: (formData: FormData) => void | Promise<void>
+  confirmMessage: string; className?: string; children: React.ReactNode
+}): React.ReactNode { throw new Error(STUB_ERROR) }
+export function RecordTable(_props: {
+  label: string; identityLabel?: string
+  columns: { key: string; label: string; numeric?: boolean; fullWidthOnMobile?: boolean; width?: string }[]
+  rows: { id: string; name: string; href?: string; description?: React.ReactNode; identityAction?: React.ReactNode; cells: Record<string, React.ReactNode> }[]
+}): React.ReactNode { throw new Error(STUB_ERROR) }
+export type QueryContext = Record<string, string | string[] | undefined> | Pick<FormData, "get"> | undefined
+export function withQueryContext(_path: string, _values: QueryContext, _names: readonly string[]): string { throw new Error(STUB_ERROR) }
+export function QueryContextFields(_props: { values: QueryContext; names: readonly string[] }): React.ReactNode { throw new Error(STUB_ERROR) }
+export async function roleHasCorePermission(_roleKey: string | null | undefined, _permission: string): Promise<boolean> { throw new Error(STUB_ERROR) }
+
+export function SubmitButton(_props: Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "type"> & {
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "destructive"
+  size?: "sm" | "md" | "lg" | "icon"
+  pendingLabel?: string
+}): React.ReactNode { throw new Error(STUB_ERROR) }

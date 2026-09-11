@@ -15,6 +15,9 @@ const manifest: WinningOSPluginManifest = {
   name: "Example Plugin",
   version: "0.1.1",
   compatibility: "core-v0",
+  minCoreVersion: "0.2.0",
+  publicApi: [],
+  jobs: {},
 
   permissions: [
     {

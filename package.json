@@ -1,13 +1,16 @@
 {
   "name": "winningos-plugin-template",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Template repository for WinningOS build-time plugins (core-v0). The installable plugin source lives in plugin/; everything else is template tooling that never ships into a Core deployment.",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "plugin:validate": "node scripts/validate-plugin.mjs",
-    "check": "npm run typecheck && npm run plugin:validate",
-    "rename": "node scripts/rename-plugin.mjs"
+    "check": "npm run typecheck && npm run plugin:validate && npm run portability:validate && npm run portability:test",
+    "rename": "node scripts/rename-plugin.mjs",
+    "portability:validate": "node scripts/validate-portability.mjs",
+    "integration:check": "node scripts/check-core-integration.mjs",
+    "portability:test": "node --test tests/portability.test.mjs"
   },
   "devDependencies": {
     "@supabase/supabase-js": "^2.108.2",
@@ -16,6 +19,7 @@
     "next": "^16.0.0",
     "react": "^19.2.0",
     "server-only": "^0.0.1",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "semver": "^7.7.2"
   }
 }

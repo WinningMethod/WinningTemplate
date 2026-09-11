@@ -8,7 +8,14 @@ A deliberately boring workspace-scoped notes list: members with permission can v
 
 ## 2. Compatibility
 
-`compatibility: core-v0`. Last verified against WinningOS Core: *(set the Core commit/tag here at each release; first live verification happens when Core Phase 10 ships — see `ROADMAP.md` slice 5).*
+`compatibility: core-v0`; `minCoreVersion: 0.2.0`.
+
+Verified Core revision: `4724e52b5a06c3abf488804a6911b9086be3a8ad` (paired WinningOS PR;
+2026-09-11). Credential-free API parity, install, disable, source removal,
+reinstall, and installed/removed Next builds passed against this template
+source. Record this template PR commit alongside the Core commit in release
+notes. Live migration/RLS and provider acceptance remains pending; this result
+does not claim production portability.
 
 ## 3. Install steps
 
@@ -87,3 +94,11 @@ npm run check        # typecheck (standalone, via core-stub) + plugin:validate
 - Standalone, this repo typechecks against `core-stub/` (the canonical Phase 10 API surface) but does not run; plugin code executes only inside a Core deployment.
 - Live integration proof is pending WinningOS Core Phase 10 (registry, host route, API barrel) — `ROADMAP.md` slice 5.
 - The notes UI is intentionally minimal; it demonstrates boundaries, not product polish.
+
+## Portability extensions
+
+The example declares no jobs or public code exports. Its existing public notes
+table remains available to declared dependents. To add jobs/exports, follow
+`docs/PORTABILITY.md`. Operators may configure aliases without editing plugin
+source. Run `npm run integration:check -- /path/to/WinningOS` against Core 0.2.0
+or newer and record both commits; retain the live migration/RLS gate above.

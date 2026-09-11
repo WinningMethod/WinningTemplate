@@ -66,3 +66,10 @@ This scaffold is grounded in these WinningMethod/winningOS source files:
 - `docs/SQL_TEMPLATES.md` — the canonical migration/RLS/uninstall SQL idioms, to be copied verbatim in the implementation slice.
 - `docs/SHARP_EDGES.md` — the ten rules distilled from real WinningOS production bugs.
 - `ROADMAP.md` — the committed slice sequence from documentation scaffold to working template.
+
+## Core 0.2.0 portability
+
+This template declares `minCoreVersion: "0.2.0"`. See `docs/PORTABILITY.md`
+for alias/job registration, public code contracts and the new shared UI surface.
+Run `npm run check`, then `npm run integration:check -- /path/to/WinningOS`.
+The paired check uses a temporary deployment and never applies SQL.

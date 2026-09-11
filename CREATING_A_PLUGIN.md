@@ -192,3 +192,14 @@ This repo never deploys — it has no app. To run your plugin for real:
 For local development against a real Core instance, the same three steps apply
 to a local clone of the deployment repo with `npm run dev` — there is no
 standalone "plugin dev server".
+
+## Portable release gate (Core 0.2.0)
+
+Declare `minCoreVersion`, dependency versions, and optional `publicApi`/`jobs`.
+Follow `docs/PORTABILITY.md`; no direct deployment imports of plugin source.
+Use slots/modules for optional UI. Export shared code only from explicitly
+declared `public/server`, `public/client`, or `public/types` entrypoints.
+Run the paired Core integration command and record both exact commits. Plugins
+with dependencies need a scratch deployment containing the declared owners and
+their source; they are not standalone bundles. Complete isolated live RLS and
+provider checks separately before release.
