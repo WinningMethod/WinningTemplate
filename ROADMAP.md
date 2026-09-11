@@ -32,3 +32,10 @@ Outcome (2026-07-05): proven live on the AcmeCo deployment repo against a dedica
 ## Definition of done (from the handover)
 
 The template is done when the acceptance checklist passes on a live deployment, disable-level removal is verified, and a second agent can produce a new working plugin from this repo by following `CREATING_A_PLUGIN.md` **without asking questions**.
+
+## Core 0.2.0 portability slice
+
+Adds matched manifest/API declarations, metadata/import/document checks and the
+paired scratch integration entrypoint. Credential-free install/removal/build proof is
+separate from the still-required live database/role acceptance. This template
+remains a single example plugin, never a deployment or a vendor copy of Core.

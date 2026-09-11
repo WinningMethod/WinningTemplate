@@ -8,7 +8,14 @@ A deliberately boring workspace-scoped notes list: members with permission can v
 
 ## 2. Compatibility
 
-`compatibility: core-v0`. Last verified against WinningOS Core: *(set the Core commit/tag here at each release; first live verification happens when Core Phase 10 ships — see `ROADMAP.md` slice 5).*
+`compatibility: core-v0`; `minCoreVersion: 0.2.0`.
+
+Verified Core revision: `1d3f8c6b3dc9117c5b8dcaa18ae6649be8851184` (paired WinningOS PR;
+2026-09-11). Credential-free API parity, install, disable, source removal,
+reinstall, and installed/removed Next builds passed against this template
+source. Record this template PR commit alongside the Core commit in release
+notes. Live migration/RLS and provider acceptance remains pending; this result
+does not claim production portability.
 
 ## 3. Install steps
 
@@ -26,10 +33,21 @@ cp -R plugin/ {deployment-repo}/plugins/example_plugin/
 #      import examplePlugin from "@/plugins/example_plugin/manifest"
 #      export const installedPlugins = [examplePlugin]
 
-# 3. Install migrations (install date supplies the timestamp):
-cp plugin/db/migrations/001_init.sql \
-   {deployment-repo}/supabase/migrations/$(date +%Y%m%d%H%M%S)_plugin_example_plugin_001_init.sql
-cd {deployment-repo} && npx supabase db push
+# 3. Install ALL ordinal migrations in order, after reviewing timestamp conflicts.
+# Run from this template checkout; use a fresh minute prefix for this install.
+set -e
+migration_prefix=$(date -u +%Y%m%d%H%M)
+for item in 00:001_init.sql 01:002_require_manage_for_delete.sql; do
+  migration_file=${item#*:}
+  migration_second=${item%%:*}
+  destination="{deployment-repo}/supabase/migrations/${migration_prefix}${migration_second}_plugin_example_plugin_${migration_file}"
+  test ! -e "$destination"
+  cp "plugin/db/migrations/$migration_file" "$destination"
+done
+# Confirm the intended isolated project and migration order before applying SQL.
+cd {deployment-repo}
+npx supabase migration list
+npx supabase db push
 
 # 4. Verify:
 npm run typecheck && npm run build && npm run plugins:validate
@@ -87,3 +105,11 @@ npm run check        # typecheck (standalone, via core-stub) + plugin:validate
 - Standalone, this repo typechecks against `core-stub/` (the canonical Phase 10 API surface) but does not run; plugin code executes only inside a Core deployment.
 - Live integration proof is pending WinningOS Core Phase 10 (registry, host route, API barrel) — `ROADMAP.md` slice 5.
 - The notes UI is intentionally minimal; it demonstrates boundaries, not product polish.
+
+## Portability extensions
+
+The example declares no jobs or public code exports. Its existing public notes
+table remains available to declared dependents. To add jobs/exports, follow
+`docs/PORTABILITY.md`. Operators may configure aliases without editing plugin
+source. Run `npm run integration:check -- /path/to/WinningOS` against Core 0.2.0
+or newer and record both commits; retain the live migration/RLS gate above.
