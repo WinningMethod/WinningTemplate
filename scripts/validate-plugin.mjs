@@ -155,6 +155,12 @@ assert(actionsLayer.includes(`plugin.${PLUGIN_ID}.`), "audit actions use the plu
 // ---------------------------------------------------------------------------
 // Repo hygiene
 // ---------------------------------------------------------------------------
+const notesRoute = read("plugin/routes/notes-page.tsx")
+const notesSkeleton = read("plugin/routes/notes-skeleton.tsx")
+assert(notesRoute.includes("fallback={<NotesSkeleton />}"), "reference route uses a skeleton Suspense fallback")
+assert(notesSkeleton.includes('role="status"') && notesSkeleton.includes('aria-hidden="true"') && notesSkeleton.includes('motion-safe:animate-pulse'), "skeleton announces loading, hides decoration, and respects reduced motion")
+assert(read("CREATING_A_PLUGIN.md").includes("LOADING_STATES.md"), "template creation guide carries the loading standard")
+
 assert(read("IMPLEMENTATION.md").includes("core-v0"), "IMPLEMENTATION.md states the compatibility level")
 assert(existsSync("plugin/db/uninstall.sql"), "purge-data uninstall script exists")
 
