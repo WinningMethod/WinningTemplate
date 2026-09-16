@@ -14,3 +14,5 @@ Do not replace page content with a visible loading sentence or a standalone spin
 Acceptance: exercise a cold route transition on a slow connection, confirm the shell remains usable, the skeleton resolves into real content, and mobile widths do not overflow. Also check reduced motion and keyboard focus. Do not add artificial production delays merely to display a skeleton.
 
 The template demonstrates a local fallback in `plugin/routes/notes-skeleton.tsx`. It uses only theme classes and the public `PageContainer` export, so no new Core API version is required. Existing deployments must pull the Core skeleton change to receive the shared host fallback.
+
+Use `prefetch={false}` on authenticated route links. Loading boundaries enable prefetching; speculative renders must not flood session verification or refresh endpoints.

@@ -53,7 +53,7 @@ export async function NewNotePage({
             <Label htmlFor="note-body">Body</Label>
             <Input id="note-body" name="body" maxLength={5000} />
             <Button type="submit">Create note</Button>
-            <Link
+            <Link prefetch={false}
               href="/p/example_plugin"
               className="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-border bg-transparent px-4 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
