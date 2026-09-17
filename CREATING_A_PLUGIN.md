@@ -203,3 +203,11 @@ Run the paired Core integration command and record both exact commits. Plugins
 with dependencies need a scratch deployment containing the declared owners and
 their source; they are not standalone bundles. Complete isolated live RLS and
 provider checks separately before release.
+
+## Loading states
+
+Keep the example’s skeleton-backed Suspense boundary when adapting the route. Match placeholder geometry to your content, follow `LOADING_STATES.md`, and check slow navigation, mobile fit, and reduced motion before release.
+
+## Performance acceptance
+
+Follow `PERFORMANCE.md` for bounded queries, independent reads, skeletons, authorization and measurement. The template check runs `perf:validate`; use the shared Core host navigation and keep plugin-owned links free of speculative prefetch.

@@ -6,11 +6,12 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "plugin:validate": "node scripts/validate-plugin.mjs",
-    "check": "npm run typecheck && npm run plugin:validate && npm run portability:validate && npm run portability:test",
+    "check": "npm run typecheck && npm run plugin:validate && npm run portability:validate && npm run portability:test && npm run perf:validate",
     "rename": "node scripts/rename-plugin.mjs",
     "portability:validate": "node scripts/validate-portability.mjs",
     "integration:check": "node scripts/check-core-integration.mjs",
-    "portability:test": "node --test tests/portability.test.mjs"
+    "portability:test": "node --test tests/portability.test.mjs",
+    "perf:validate": "node scripts/validate-performance.mjs"
   },
   "devDependencies": {
     "@supabase/supabase-js": "^2.108.2",

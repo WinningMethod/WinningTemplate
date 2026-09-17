@@ -1,3 +1,5 @@
+import { Suspense } from "react"
+import { NotesSkeleton } from "./notes-skeleton"
 import Link from "next/link"
 import {
   Badge,
@@ -32,7 +34,11 @@ function formatDate(value: string): string {
  * data comes from the RLS-guarded read layer; controls render from the live
  * grant map so what members see matches what the server allows.
  */
-export async function NotesPage({
+export function NotesPage(props: { searchParams?: Promise<{ status?: string }> }) {
+  return <Suspense fallback={<NotesSkeleton />}><NotesContent {...props} /></Suspense>
+}
+
+async function NotesContent({
   searchParams,
 }: {
   searchParams?: Promise<{ status?: string }>
@@ -48,7 +54,7 @@ export async function NotesPage({
         description="The reference feature every WinningOS plugin is forked from: a workspace-scoped list with live-grant permissions, RLS, and audit events."
         actions={
           canCreate ? (
-            <Link
+            <Link prefetch={false}
               href="/p/example_plugin/new"
               className="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >

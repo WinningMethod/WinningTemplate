@@ -61,3 +61,11 @@ git diff --check
 Also run file inventory checks that prove the repo remains documentation/scaffold only.
 
 Do not claim implementation readiness until the relevant future validation commands exist and have been run in a real implementation task.
+
+## Page loading UX
+
+All page-loading and Suspense fallbacks use skeleton screens. Follow `LOADING_STATES.md` and the notes route example. Never import Core internal UI paths.
+
+## Performance gate
+
+Follow `PERFORMANCE.md` for every new page and plugin. `npm run perf:validate` is required in CI; include live loading-path verification before declaring a page ready.
