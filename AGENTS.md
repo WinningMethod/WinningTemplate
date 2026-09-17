@@ -65,3 +65,7 @@ Do not claim implementation readiness until the relevant future validation comma
 ## Page loading UX
 
 All page-loading and Suspense fallbacks use skeleton screens. Follow `LOADING_STATES.md` and the notes route example. Never import Core internal UI paths.
+
+## Performance gate
+
+Follow `PERFORMANCE.md` for every new page and plugin. `npm run perf:validate` is required in CI; include live loading-path verification before declaring a page ready.
