@@ -61,3 +61,8 @@ git diff --check
 Also run file inventory checks that prove the repo remains documentation/scaffold only.
 
 Do not claim implementation readiness until the relevant future validation commands exist and have been run in a real implementation task.
+
+
+## Responsive panel UX
+
+Future panels must follow RESPONSIVE_PANELS.md. Ship container-responsive UX for narrow, medium and wide panel dimensions, with touch and keyboard alternatives. Core owns Desktop/Tablet/Mobile placement; plugins own readable content at every supported size. Recheck current Apple iPhone Duo guidance for fold transitions; preserve in-progress work and distinguish browser emulation from physical-device testing. This is a vNext design requirement, not a new core-v0 runtime export.
