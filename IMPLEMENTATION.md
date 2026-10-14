@@ -8,7 +8,7 @@ A deliberately boring workspace-scoped notes list: members with permission can v
 
 ## 2. Compatibility
 
-`compatibility: core-v0`; `minCoreVersion: 0.2.0`.
+`compatibility: core-v0`; `minCoreVersion: 0.4.0` (global search; see CREATING_A_PLUGIN.md §6a).
 
 Verified Core revision: `1d3f8c6b3dc9117c5b8dcaa18ae6649be8851184` (paired WinningOS PR;
 2026-09-11). Credential-free API parity, install, disable, source removal,
@@ -80,6 +80,8 @@ Permissions (registered by `001_init.sql`, deny-by-default, owner-editable in Se
 ## 6. Navigation and settings
 
 One nav entry ("Example", icon `StickyNote`, gated on `plugin.example_plugin.view`) rendered by Core in the Plugins sidebar group; one settings panel under Settings → Plugins → Example Plugin. Both come from `plugin/manifest.ts`; Core decides placement.
+
+Global search: `search: exampleSearch` (`plugin/server/search.ts`). Humans find notes by title or body through the RLS user client, so the `plugin.example_plugin.view` policy decides visibility. Agents get no results: the example has no agent-authorized read path, and it never falls back to the service role. Requires Core 0.4.0.
 
 ## 7. External integrations and secrets
 

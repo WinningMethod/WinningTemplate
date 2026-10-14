@@ -9,13 +9,15 @@ import { PERMISSIONS, PLUGIN_ID } from "./permissions"
 import { NotesPage } from "./routes/notes-page"
 import { NewNotePage } from "./routes/new-note-page"
 import { ExamplePluginSettingsPanel } from "./routes/settings-panel"
+import { exampleSearch } from "./server/search"
 
 const manifest: WinningOSPluginManifest = {
   id: PLUGIN_ID,
   name: "Example Plugin",
   version: "0.1.1",
   compatibility: "core-v0",
-  minCoreVersion: "0.2.0",
+  // search requires Core 0.4.0.
+  minCoreVersion: "0.4.0",
   publicApi: [],
   jobs: {},
 
@@ -54,6 +56,9 @@ const manifest: WinningOSPluginManifest = {
   // children of the host's primary nav entry instead of top-level sidebar
   // entries. Example: navRollup: { into: "crm" }
   // This template plugin is its own host, so it declares none.
+
+  // Global search (required): a provider, or null if nothing is searchable.
+  search: exampleSearch,
 
   routes: {
     "": NotesPage,

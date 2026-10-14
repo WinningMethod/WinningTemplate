@@ -4,13 +4,13 @@ import { validateMetadata, validateAliases, readManifest } from '../scripts/lib/
 import path from 'node:path'
 const template=readManifest(path.resolve('plugin'))
 test('worked example has an explicit supported minimum',()=>{
-  validateMetadata([template],'0.2.0')
-  assert.throws(()=>validateMetadata([template],'0.1.0'))
+  validateMetadata([template],'0.4.0')
+  assert.throws(()=>validateMetadata([template],'0.3.1'))
 })
 test('dependencies require a sufficient installed version and ordering',()=>{
   const consumer={...template,id:'viewer',dependsOn:[{pluginId:template.id,minVersion:'2.0.0'}]}
-  assert.throws(()=>validateMetadata([template,consumer],'0.2.0'))
-  assert.throws(()=>validateMetadata([consumer,template],'0.2.0'))
+  assert.throws(()=>validateMetadata([template,consumer],'0.4.0'))
+  assert.throws(()=>validateMetadata([consumer,template],'0.4.0'))
 })
 test('example can receive a deployment alias without plugin source changes',()=>{
   const alias={path:'/notes',pluginId:template.id,route:''}

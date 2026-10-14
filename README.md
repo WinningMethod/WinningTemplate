@@ -69,7 +69,7 @@ This scaffold is grounded in these WinningMethod/winningOS source files:
 
 ## Core 0.2.0 portability
 
-This template declares `minCoreVersion: "0.2.0"`. See `docs/PORTABILITY.md`
+This template declares `minCoreVersion: "0.4.0"` (required `search`, CREATING_A_PLUGIN.md §6a). See `docs/PORTABILITY.md`
 for alias/job registration, public code contracts and the new shared UI surface.
 Run `npm run check`, then `npm run integration:check -- /path/to/WinningOS`.
 The paired check uses a temporary deployment and never applies SQL.
