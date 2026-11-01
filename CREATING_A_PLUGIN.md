@@ -128,6 +128,26 @@ Future plugin implementation should include:
 - an explicit uninstall script for purge-data removal
 - validators that keep manifest, permissions, migrations, and uninstall docs in sync
 
+## 6a. Search
+
+Every plugin must be findable through workspace Search (Cmd/Ctrl K and
+`GET /api/core/search`). Declare `search` in the manifest:
+
+- **Provider** (`plugin/server/search.ts`, `server-only`): receives
+  `{ query, limit, signal }` and the searcher's actor. Search only what that
+  searcher may open: for humans, read through the RLS user client (your
+  `.view` policy is the boundary); for agents, call your own SECURITY DEFINER
+  function that resolves the agent from its credential hash and rechecks
+  grants (Core 0.3.0 `private.core_agent_actor`). Never read tables with the
+  service role. Return records (`kind: "record"`) and, if you ship help,
+  help topics (`kind: "docs"`), with `href` under `/p/{plugin_id}`.
+- **`null`**: only when the plugin has nothing worth searching (e.g. a pure
+  connector); say why in `IMPLEMENTATION.md`.
+
+Honor `signal` and `limit`; Core caps results, drops links outside your plugin
+and treats an error or timeout as a partial result. Do not index or cache
+across requests. Test that a principal without your view grant gets nothing.
+
 ## 7. Security and data rules
 
 Every plugin must enforce security outside the UI:
@@ -173,6 +193,7 @@ Before a real plugin is released, reviewers should verify:
 - RLS exists before app code reads plugin tables
 - server/data boundaries enforce permissions
 - uninstall expectations are explicit
+- `search` is declared; the provider returns only what the searcher may open (verified for a principal without the view grant)
 - validation commands have been run against the plugin repo and a real Core integration where applicable
 
 ## 11. Seeing your plugin live

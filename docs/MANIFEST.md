@@ -67,6 +67,8 @@ export type WinningOSPluginManifest = {
    * uninstalled after, and expose what this plugin uses via publicTables.
    */
   dependsOn?: { pluginId: string; minVersion: string }[]
+  /** Global search provider, or null when nothing is searchable (Core 0.4.0, required). */
+  search?: PluginSearchProvider | null
 }
 ```
 
@@ -76,4 +78,5 @@ export type WinningOSPluginManifest = {
 - `routes` keys are plugin-relative (`""`, `"/new"`, `"/items/[id]"`). Core mounts them under `/p/{plugin_id}`, so collisions with Core or other plugins are structurally impossible.
 - `compatibility` is a literal type: installing a plugin against a Core with a different level is a **build-time type error**, not a runtime surprise.
 - **Sidebar rule:** satellite plugins (Viewers, Bridges, Connectors — anything orbiting a domain owner) declare `navRollup: { into: "{host_plugin_id}" }` so their nav entries render as dropdown children of the host's primary entry — one function, ONE sidebar entry. Only the domain's primary plugin (its Tables owner or App) hosts a top-level entry. Rollup is presentation only: each entry keeps its own permission gate, and unresolvable targets fall back to top-level entries.
+- **Search rule (Core 0.4.0):** every plugin declares `search` — a server-only provider, or `null` when it has nothing a person or agent would look for. Core calls the provider from workspace Search with the searcher's verified identity (`{kind:"human"}` or `{kind:"agent", credentialHash}`); it must return only hits from the same authorized reads its pages/API use (RLS user client for humans; an agent-resolving database function for agents), with links under `/p/{plugin_id}`. Records list under Plugins, help topics (`kind: "docs"`) under Docs. `plugin:validate` fails when `search` is missing or reads tables with the service role.
 - The template's own manifest must declare its example table in `publicTables` (the template demonstrates *being* a dependency) and ship `dependsOn: []` with a commented example (`{ pluginId: "crm", minVersion: "1.0.0" }`).

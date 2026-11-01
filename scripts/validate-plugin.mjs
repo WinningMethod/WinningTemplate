@@ -153,6 +153,22 @@ assert(actionsLayer.includes("logCoreAuditEvent"), "privileged actions append au
 assert(actionsLayer.includes(`plugin.${PLUGIN_ID}.`), "audit actions use the plugin.{id}.{event} namespace")
 
 // ---------------------------------------------------------------------------
+// Global search (Core 0.4.0): every plugin decides explicitly what is searchable
+// ---------------------------------------------------------------------------
+const manifestCode = manifest.split("\n").filter((line) => !line.trim().startsWith("//")).join("\n")
+const searchDecl = manifestCode.match(/^\s*search:\s*(null|[A-Za-z_$][\w$]*)\s*,?\s*$/m)
+assert(Boolean(searchDecl), "manifest declares search: a provider, or null when nothing is searchable")
+if (searchDecl[1] !== "null") {
+  const searchFiles = sourceFiles.filter((file) => read(file).includes(`export const ${searchDecl[1]}`))
+  assert(searchFiles.length === 1, `search provider ${searchDecl[1]} is defined in plugin source`)
+  const searchSource = read(searchFiles[0])
+  assert(searchSource.includes('import "server-only"'), "search provider is server-only")
+  // Agents may be searched through a service-role RPC that resolves and rechecks
+  // the agent in the database; reading tables with the service role skips RLS.
+  assert(!/createServiceRoleClient\(\)[\s\S]{0,80}\.from\(/.test(searchSource), "search provider never reads tables with the service role (results must respect the searcher's access)")
+}
+
+// ---------------------------------------------------------------------------
 // Repo hygiene
 // ---------------------------------------------------------------------------
 assert(read("IMPLEMENTATION.md").includes("core-v0"), "IMPLEMENTATION.md states the compatibility level")

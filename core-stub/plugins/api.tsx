@@ -72,6 +72,11 @@ export type WinningOSPluginManifest = {
   publicApi?: string[]
   /** Authenticated machine entrypoints, dispatched only while installed. */
   jobs?: Record<string, PluginJob>
+  /**
+   * Global search provider (Core 0.4.0), or null when the plugin has nothing
+   * searchable. Required: plugin:validate fails when it is missing.
+   */
+  search?: PluginSearchProvider | null
   /** Every permission the plugin registers. Format: plugin.{id}.{action}. */
   permissions: {
     key: PluginPermissionKey
@@ -319,3 +324,24 @@ export function SourceBrowser(_props: {
   selected: string; children: React.ReactNode; countLabel?: string
 }): React.ReactNode { throw new Error(STUB_ERROR) }
 export function DetailDrawer(_props: { title: string; closeHref: string; children: React.ReactNode }): React.ReactNode { throw new Error(STUB_ERROR) }
+
+/** Core 0.4.0 global search. Humans search with the request's Supabase session;
+ * agents present only an unverified credential hash that the plugin's own
+ * database function must resolve. Never widen results beyond what the searcher
+ * could open through the plugin's pages or API. */
+export type PluginSearchActor = { kind: "human" } | { kind: "agent"; credentialHash: string }
+export type PluginSearchHit = {
+  id: string
+  /** "record" lists under Plugins; "docs" lists under Docs. */
+  kind: "record" | "docs"
+  title: string
+  path: string
+  /** Must stay under /p/{plugin_id}; Core drops other links. */
+  href: string
+  text: string
+  state?: "draft" | "published"
+}
+export type PluginSearchProvider = (
+  input: { query: string; limit: number; signal: AbortSignal },
+  actor: PluginSearchActor,
+) => Promise<PluginSearchHit[]>
